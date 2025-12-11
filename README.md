@@ -42,6 +42,14 @@ If you prefer to verify transparency:
 
 ---
 
+## 📥 Quick Download
+**Just want the file?** Click here to download directly:
+- **[Download 2025_Tax_Organizer_final_unprotected.xlsx](https://github.com/pmefford/tax-helper/raw/master/2025_Tax_Organizer_final_unprotected.xlsx)**
+
+Or visit the [Releases page](https://github.com/pmefford/tax-helper/releases) for the latest version.
+
+---
+
 ## 📂 Files Included
 | File | Description |
 |------|-------------|
