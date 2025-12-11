@@ -1,0 +1,89 @@
+name: Verify checksums
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  verify-checksums:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Show files
+        run: ls -R
+
+      - name: Verify SHA256 checksums
+        run: |
+          echo "Recomputing SHA256 checksums and comparing to checksums.txt"
+
+          # Fail fast if checksums.txt is missing
+          if [ ! -f checksums.txt ]; then
+            echo "ERROR: checksums.txt not found at repo root."
+            exit 1
+          fi
+
+          # Create a temp file with recomputed hashes
+          tmpfile=$(mktemp)
+
+          # List of files we expect to verify
+          files=(
+            "2025_Tax_Organizer_final_unprotected.xlsx"
+            "2025_Tax_Organizer_blank.csv"
+            "README.md"
+          )
+
+          for f in "${files[@]}"; do
+            if [ ! -f "$f" ]; then
+              echo "ERROR: Expected file '$f' not found."
+              exit 1
+            fi
+            sha256sum "$f" >> "$tmpfile"
+          done
+
+          echo "Expected checksums (checksums.txt):"
+          cat checksums.txt
+          echo
+          echo "Actual checksums (recomputed):"
+          cat "$tmpfile"
+          echo
+
+          # Normalize formats:
+          # checksums.txt: "SHA256 (filename) = hash"
+          # sha256sum: "hash  filename"
+          # We'll transform both into "filename:hash" for comparison.
+          normalize() {
+            sed \
+              -e 's/^SHA256 (//g' \
+              -e 's/) = / /g' \
+              -e 's/  / /g' \
+              -e 's/^\([0-9a-f]\+\)  \(.*\)$/\2 \1/g' \
+              "$1" \
+            | awk '{print $2 ":" $1}' \
+            | sort
+          }
+
+          exp=$(mktemp)
+          act=$(mktemp)
+
+          normalize checksums.txt > "$exp"
+          normalize "$tmpfile" > "$act"
+
+          echo "Normalized expected:"
+          cat "$exp"
+          echo
+          echo "Normalized actual:"
+          cat "$act"
+          echo
+
+          if diff -u "$exp" "$act"; then
+            echo "Checksums match. ✅"
+          else
+            echo "ERROR: Checksums do NOT match. ❌"
+            echo "If you intentionally changed a file, update checksums.txt accordingly."
+            exit 1
+          fi
