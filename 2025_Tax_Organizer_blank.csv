@@ -1,0 +1,20 @@
+# SHEET: W2_Income
+EmployerName,EmployeeName,Wages,FederalWithholding,SocialSecurityWages,SocialSecurityTax,MedicareWages,MedicareTax
+
+# SHEET: 1099_And_Other
+Payer,FormType,IncomeType,Amount,FederalWithholding,Notes
+
+# SHEET: Itemized_Deductions_Charity
+Description,Category,Type,Amount
+
+# SHEET: Itemized_Deductions_Mortgage
+Description,InterestPaid
+
+# SHEET: Itemized_Deductions_SALT
+StateIncomeTax,PropertyTax,OtherSALT
+
+# SHEET: Itemized_Deductions_Medical
+Description,Amount
+
+# SHEET: Summary_1040_Helper
+Field,Value

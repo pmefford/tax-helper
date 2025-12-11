@@ -45,7 +45,7 @@ If you prefer to verify transparency:
 ## 📂 Files Included
 | File | Description |
 |------|-------------|
-| **2025_Tax_Organizer.xlsx** | The main organizer (recommended). |
+| **2025_Tax_Organizer_final_unprotected.xlsx** | The main organizer (recommended). |
 | **2025_Tax_Organizer_blank.csv** | Structure-only CSV for verification and transparency. |
 | **README.md** | This file. |
 | **LICENSE** | Open-source license (MIT suggested). |
