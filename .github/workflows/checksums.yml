@@ -53,25 +53,21 @@ jobs:
           echo
 
           # Normalize formats:
-          # checksums.txt: "SHA256 (filename) = hash"
-          # sha256sum: "hash  filename"
-          # We'll transform both into "filename:hash" for comparison.
-          normalize() {
-            sed \
-              -e 's/^SHA256 (//g' \
-              -e 's/) = / /g' \
-              -e 's/  / /g' \
-              -e 's/^\([0-9a-f]\+\)  \(.*\)$/\2 \1/g' \
-              "$1" \
-            | awk '{print $2 ":" $1}' \
-            | sort
+          # checksums.txt: "SHA256 (filename) = hash" -> "filename:hash"
+          # sha256sum: "hash  filename" -> "filename:hash"
+          normalize_checksums_txt() {
+            sed -e 's/^SHA256 (//g' -e 's/) = / /g' "$1" | awk '{print $1 ":" $2}' | sort
+          }
+          
+          normalize_sha256sum() {
+            awk '{print $2 ":" $1}' "$1" | sort
           }
 
           exp=$(mktemp)
           act=$(mktemp)
 
-          normalize checksums.txt > "$exp"
-          normalize "$tmpfile" > "$act"
+          normalize_checksums_txt checksums.txt > "$exp"
+          normalize_sha256sum "$tmpfile" > "$act"
 
           echo "Normalized expected:"
           cat "$exp"
